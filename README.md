@@ -109,15 +109,13 @@
 - 외부 Mock Worker latency, timeout, 5xx 응답
 - 긴 polling 구간에서 `PROCESSING` 작업이 많아질 때의 조회 부하
 
-## 로컬 실행
+## 실행 방법
 ```bash
 ./scripts/setup-env.sh "이름" "이메일"
 docker compose up --build
 ```
 
-- 본 과제 실행에는 별도의 상용 계정이나 유료 자격 증명이 필요하지 않습니다.
-  - `scripts/setup-env.sh`가 Mock Worker 키 발급 API를 호출해 `.env`의 `MOCK_WORKER_API_KEY`를 채웁니다.
-
+- `scripts/setup-env.sh`가 Mock Worker 키 발급 API를 호출해 `.env`의 `MOCK_WORKER_API_KEY`를 채웁니다.
 - 기본 포트:
   - API: `8080`
   - MySQL: `3306`
