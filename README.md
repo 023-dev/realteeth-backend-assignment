@@ -8,17 +8,6 @@
 - `GET /api/v1/jobs` 기본 정렬은 `createdAt DESC, id DESC`를 사용합니다.
 - 설계 목표는 과제 요구사항을 충족하면서도, 문서와 코드가 같은 설명을 하도록 구조를 단순하게 유지하는 것입니다.
 
-## 설계 선택 기준
-- 이번 구현에서는 과제 필수 요구사항이 아닌 요소는 과감히 제외했습니다.
-- 제외한 항목:
-  - Redis cache
-  - distributed lock / named lock
-  - MQ / outbox
-  - 즉시 submit 경로
-- 이유:
-  - 중복 요청 처리, 상태 전이, 처리 보장 모델, 재시작 복구, 정합성 설명은 DB + scheduler + lease 만으로 충분히 설명 가능합니다.
-  - 과제 범위에서는 성능 최적화보다 설명 가능성과 일관성이 더 중요합니다.
-
 ## 상태 모델 설계 의도
 - 상태는 `PENDING`, `PROCESSING`, `COMPLETED`, `FAILED` 네 개만 사용합니다.
 - 의미:
@@ -150,10 +139,3 @@ docker compose up --build
 ## 제출 패키지 문서
 - 설계 설명 상세: `docs/submission/5-design-explanation.md`
 - 실행 가능 조건 상세: `docs/submission/6-run-conditions.md`
-
-## 제출 방법
-- GitHub Repository 링크를 제출합니다.
-  - 제출 링크: `https://github.com/023-dev/realteeth-backend-assignment`
-- 실행 방법과 설계 설명은 본 `README.md`에 포함합니다.
-  - 설계 설명: 상태 모델, 실패 처리, 동시 요청 고려, 병목 지점, 외부 연동 방식/선택 이유
-  - 실행 방법: `./scripts/setup-env.sh ...`, `docker compose up --build`, 포트 정보(`8080`, `3306`)
