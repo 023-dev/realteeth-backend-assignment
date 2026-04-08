@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: api
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/realteeth?serverTimezone=UTC&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  task:
+    scheduling:
+      pool:
+        size: ${JOB_SCHEDULER_POOL_SIZE:2}
+  lifecycle:
+    timeout-per-shutdown-phase: ${APP_SHUTDOWN_TIMEOUT:35s}
+
+server:
+  shutdown: graceful
+
+mock-worker:
+  base-url: ${MOCK_WORKER_BASE_URL:https://dev.realteeth.ai/mock}
+  api-key: ${MOCK_WORKER_API_KEY}
+  connect-timeout-millis: ${MOCK_WORKER_CONNECT_TIMEOUT_MILLIS:3000}
+  read-timeout-millis: ${MOCK_WORKER_READ_TIMEOUT_MILLIS:5000}
+  circuit-breaker:
+    failure-rate-threshold: ${MOCK_WORKER_CIRCUIT_BREAKER_FAILURE_RATE_THRESHOLD:50}
+    sliding-window-size: ${MOCK_WORKER_CIRCUIT_BREAKER_SLIDING_WINDOW_SIZE:10}
+    minimum-number-of-calls: ${MOCK_WORKER_CIRCUIT_BREAKER_MINIMUM_NUMBER_OF_CALLS:5}
+    permitted-number-of-calls-in-half-open-state: ${MOCK_WORKER_CIRCUIT_BREAKER_PERMITTED_CALLS_IN_HALF_OPEN:3}
+    wait-duration-in-open-state-millis: ${MOCK_WORKER_CIRCUIT_BREAKER_WAIT_OPEN_MILLIS:30000}
+
+job:
+  scheduler:
+    enabled: ${JOB_SCHEDULER_ENABLED:true}
+  polling-interval-ms: ${JOB_POLLING_INTERVAL_MS:5000}
+  execution-lease-ms: ${JOB_EXECUTION_LEASE_MS:30000}
+  initial-backoff-ms: ${JOB_INITIAL_BACKOFF_MS:5000}
+  max-backoff-ms: ${JOB_MAX_BACKOFF_MS:60000}
+  batch-size: ${JOB_BATCH_SIZE:100}
+  recovery-batch-size: ${JOB_RECOVERY_BATCH_SIZE:100}
+  max-retry-count: ${JOB_MAX_RETRY_COUNT:3}

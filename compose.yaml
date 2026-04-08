@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/realteeth?serverTimezone=UTC&characterEncoding=UTF-8
+      DB_USERNAME: root
+      DB_PASSWORD: root
+      MOCK_WORKER_API_KEY: ${MOCK_WORKER_API_KEY:?MOCK_WORKER_API_KEY is required}
+      MOCK_WORKER_BASE_URL: ${MOCK_WORKER_BASE_URL:-https://dev.realteeth.ai/mock}
+      JOB_SCHEDULER_POOL_SIZE: ${JOB_SCHEDULER_POOL_SIZE:-2}
+      APP_SHUTDOWN_TIMEOUT: ${APP_SHUTDOWN_TIMEOUT:-35s}
+    ports:
+      - "8080:8080"
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: realteeth
+      MYSQL_ROOT_PASSWORD: root
+      TZ: UTC
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20

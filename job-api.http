@@ -1,0 +1,53 @@
+@baseUrl = http://localhost:8080
+@idempotencyKey = demo-idempotency-key-001
+@imageUrl = https://picsum.photos/seed/realteeth-demo/512/512.jpg
+@conflictImageUrl = https://picsum.photos/seed/realteeth-conflict/512/512.jpg
+
+### 1. 새 작업 생성 -> 202 Accepted, status=PENDING 예상
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: application/json
+X-Idempotency-Key: {{idempotencyKey}}
+
+{
+  "imageUrl": "{{imageUrl}}"
+}
+
+> {%
+  client.global.set("jobId", response.body.jobId);
+%}
+
+### 2. 같은 멱등키 + 같은 payload -> 200 OK, 같은 jobId 예상
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: application/json
+X-Idempotency-Key: {{idempotencyKey}}
+
+{
+  "imageUrl": "{{imageUrl}}"
+}
+
+### 3. 같은 멱등키 + 다른 payload -> 409 Conflict 예상
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: application/json
+X-Idempotency-Key: {{idempotencyKey}}
+
+{
+  "imageUrl": "{{conflictImageUrl}}"
+}
+
+### 4. 작업 단건 조회
+### scheduler가 이미 처리했다면 status는 PENDING 대신 PROCESSING/COMPLETED/FAILED 일 수 있음
+GET {{baseUrl}}/api/v1/jobs/{{jobId}}
+Accept: application/json
+
+### 5. 작업 목록 조회
+GET {{baseUrl}}/api/v1/jobs?page=0&size=20
+Accept: application/json
+
+### 6. 상태별 작업 목록 조회
+### 생성 직후 바로 확인하면 PENDING 필터가 더 재현하기 쉬움
+GET {{baseUrl}}/api/v1/jobs?page=0&size=20&status=PENDING
+Accept: application/json
+
+### 7. 처리 진행 후 상태별 작업 목록 조회
+GET {{baseUrl}}/api/v1/jobs?page=0&size=20&status=PROCESSING
+Accept: application/json

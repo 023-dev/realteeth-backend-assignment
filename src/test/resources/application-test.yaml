@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:realteeth;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+  task:
+    scheduling:
+      enabled: false
+
+mock-worker:
+  base-url: http://localhost:9999/mock
+  api-key: test-api-key
+  connect-timeout-millis: 1000
+  read-timeout-millis: 1000
+  circuit-breaker:
+    failure-rate-threshold: 50
+    sliding-window-size: 10
+    minimum-number-of-calls: 5
+    permitted-number-of-calls-in-half-open-state: 1
+    wait-duration-in-open-state-millis: 60000
+
+job:
+  scheduler:
+    enabled: false
+  polling-interval-ms: 20
+  execution-lease-ms: 30000
+  initial-backoff-ms: 20
+  max-backoff-ms: 100
+  batch-size: 100
+  recovery-batch-size: 100
+  max-retry-count: 3
