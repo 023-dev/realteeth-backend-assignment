@@ -133,7 +133,3 @@ docker compose up --build
 ./gradlew test --tests "com.realteeh.api.job.presentation.JobV1ApiControllerTest"
 ./gradlew test
 ```
-
-## 제출 패키지 문서
-- 설계 설명 상세: `docs/submission/5-design-explanation.md`
-- 실행 가능 조건 상세: `docs/submission/6-run-conditions.md`
