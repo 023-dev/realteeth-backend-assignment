@@ -150,7 +150,6 @@ docker compose up --build
 ## 제출 패키지 문서
 - 설계 설명 상세: `docs/submission/5-design-explanation.md`
 - 실행 가능 조건 상세: `docs/submission/6-run-conditions.md`
-- 제출 방법 체크리스트: `docs/submission/7-submission-method.md`
 
 ## 제출 방법
 - GitHub Repository 링크를 제출합니다.
